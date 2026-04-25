@@ -5,7 +5,7 @@
 Couchify is a marketplace for booking unused private seating capacity by the minute. A space has multiple seats, and bookings reserve seats (not the full couch).
 
 ## MVP Scope
-
+https://couchify-five.vercel.app/
 This repository now contains a fully working **Next.js + TypeScript + Tailwind** app with mock data and these routes:
 
 - `/` landing page
