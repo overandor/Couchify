@@ -1,40 +1,30 @@
-import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
-});
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import './globals.css';
+import { Logo } from '@/components/Logo';
 
 export const metadata: Metadata = {
-  title: "Couchify - Private Space by the Minute",
-  description:
-    "Book unused couch capacity in real time. Reserve seats, not whole rooms, priced by the minute.",
+  title: 'Couchify',
+  description: 'Book unused private seating capacity by the minute.'
 };
 
-export const viewport: Viewport = {
-  themeColor: "#F5F7FB",
-  width: "device-width",
-  initialScale: 1,
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} bg-background`}
-    >
-      <body className="font-sans antialiased">{children}</body>
+    <html lang="en">
+      <body>
+        <div className="mx-auto min-h-screen max-w-6xl px-4 py-6 sm:px-6">
+          <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <Logo />
+            <nav className="flex flex-wrap gap-2 text-sm">
+              <Link href="/explore" className="neu-button">Explore</Link>
+              <Link href="/host" className="neu-button">Host</Link>
+              <Link href="/guest/bookings" className="neu-button">Bookings</Link>
+              <Link href="/profile" className="neu-button">Profile</Link>
+            </nav>
+          </header>
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
