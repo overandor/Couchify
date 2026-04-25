@@ -1,0 +1,573 @@
+import type {
+  User,
+  HostProfile,
+  SpaceUnit,
+  BookingRequest,
+  CheckInSession,
+} from "./types";
+
+export const users: User[] = [
+  { id: "u1", name: "Alex Rivera", role: "host", rating: 4.8 },
+  { id: "u2", name: "Jordan Kim", role: "host", rating: 4.9 },
+  { id: "u3", name: "Sam Chen", role: "host", rating: 4.6 },
+  { id: "u4", name: "Taylor Morgan", role: "host", rating: 4.7 },
+  { id: "u5", name: "Casey Brooks", role: "host", rating: 4.5 },
+  { id: "u6", name: "Jamie Lee", role: "guest", rating: 4.3 },
+  { id: "u7", name: "Morgan Park", role: "guest", rating: 4.1 },
+  { id: "u8", name: "Riley Scott", role: "guest", rating: 4.6 },
+];
+
+export const hosts: HostProfile[] = [
+  {
+    id: "h1",
+    userId: "u1",
+    displayName: "Alex Rivera",
+    responseTimeMinutes: 5,
+    rating: 4.8,
+    totalEarningsUsd: 1240.5,
+  },
+  {
+    id: "h2",
+    userId: "u2",
+    displayName: "Jordan Kim",
+    responseTimeMinutes: 3,
+    rating: 4.9,
+    totalEarningsUsd: 2890.0,
+  },
+  {
+    id: "h3",
+    userId: "u3",
+    displayName: "Sam Chen",
+    responseTimeMinutes: 8,
+    rating: 4.6,
+    totalEarningsUsd: 680.25,
+  },
+  {
+    id: "h4",
+    userId: "u4",
+    displayName: "Taylor Morgan",
+    responseTimeMinutes: 4,
+    rating: 4.7,
+    totalEarningsUsd: 1560.75,
+  },
+  {
+    id: "h5",
+    userId: "u5",
+    displayName: "Casey Brooks",
+    responseTimeMinutes: 10,
+    rating: 4.5,
+    totalEarningsUsd: 420.0,
+  },
+];
+
+export const spaces: SpaceUnit[] = [
+  {
+    id: "s1",
+    hostId: "h1",
+    title: "L-Shaped Couch in Williamsburg",
+    description:
+      "Spacious L-shaped sectional in a bright, plant-filled Brooklyn apartment. Great for working quietly with a friend or solo deep focus.",
+    spaceType: "couch",
+    locationLabel: "Williamsburg, Brooklyn",
+    latitude: 40.7081,
+    longitude: -73.9571,
+    capacitySeats: 4,
+    availableSeats: 2,
+    pricePerMinutePerSeatUsd: 0.25,
+    minimumMinutes: 15,
+    maximumMinutes: 180,
+    rating: 4.8,
+    rules: {
+      quietRequired: false,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: true,
+      foodAllowed: true,
+    },
+    availability: [
+      {
+        id: "a1",
+        spaceId: "s1",
+        startTime: "2026-04-24T09:00:00Z",
+        endTime: "2026-04-24T17:00:00Z",
+        capacitySeats: 4,
+        bookedSeats: 2,
+      },
+      {
+        id: "a2",
+        spaceId: "s1",
+        startTime: "2026-04-25T10:00:00Z",
+        endTime: "2026-04-25T16:00:00Z",
+        capacitySeats: 4,
+        bookedSeats: 0,
+      },
+    ],
+    photos: ["/images/couch-1.jpg"],
+  },
+  {
+    id: "s2",
+    hostId: "h2",
+    title: "Quiet Couch near Union Square",
+    description:
+      "Plush two-seater couch in a calm, minimalist apartment steps from Union Square. Perfect for reading or light laptop work.",
+    spaceType: "couch",
+    locationLabel: "Union Square, Manhattan",
+    latitude: 40.7359,
+    longitude: -73.9911,
+    capacitySeats: 2,
+    availableSeats: 1,
+    pricePerMinutePerSeatUsd: 0.35,
+    minimumMinutes: 20,
+    maximumMinutes: 120,
+    rating: 4.9,
+    rules: {
+      quietRequired: true,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: false,
+      foodAllowed: false,
+    },
+    availability: [
+      {
+        id: "a3",
+        spaceId: "s2",
+        startTime: "2026-04-24T08:00:00Z",
+        endTime: "2026-04-24T14:00:00Z",
+        capacitySeats: 2,
+        bookedSeats: 1,
+      },
+    ],
+    photos: ["/images/couch-2.jpg"],
+  },
+  {
+    id: "s3",
+    hostId: "h3",
+    title: "Desk Seat in SoHo Loft",
+    description:
+      "Single desk spot in a stylish SoHo loft with great natural light. Power outlet at the desk, fast WiFi.",
+    spaceType: "desk",
+    locationLabel: "SoHo, Manhattan",
+    latitude: 40.7233,
+    longitude: -73.9987,
+    capacitySeats: 1,
+    availableSeats: 1,
+    pricePerMinutePerSeatUsd: 0.4,
+    minimumMinutes: 30,
+    maximumMinutes: 240,
+    rating: 4.6,
+    rules: {
+      quietRequired: false,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: true,
+      foodAllowed: true,
+    },
+    availability: [
+      {
+        id: "a4",
+        spaceId: "s3",
+        startTime: "2026-04-24T07:00:00Z",
+        endTime: "2026-04-24T19:00:00Z",
+        capacitySeats: 1,
+        bookedSeats: 0,
+      },
+    ],
+    photos: ["/images/desk-1.jpg"],
+  },
+  {
+    id: "s4",
+    hostId: "h4",
+    title: "Phone Call Corner near Midtown",
+    description:
+      "Private corner nook in a quiet midtown apartment. Ideal for taking calls, video meetings, or quick focus sessions.",
+    spaceType: "phone_call_corner",
+    locationLabel: "Midtown, Manhattan",
+    latitude: 40.7549,
+    longitude: -73.9840,
+    capacitySeats: 1,
+    availableSeats: 1,
+    pricePerMinutePerSeatUsd: 0.5,
+    minimumMinutes: 10,
+    maximumMinutes: 60,
+    rating: 4.7,
+    rules: {
+      quietRequired: false,
+      wifiAvailable: true,
+      laptopFriendly: false,
+      smokingAllowed: false,
+      phoneCallsAllowed: true,
+      foodAllowed: false,
+    },
+    availability: [
+      {
+        id: "a5",
+        spaceId: "s4",
+        startTime: "2026-04-24T09:00:00Z",
+        endTime: "2026-04-24T18:00:00Z",
+        capacitySeats: 1,
+        bookedSeats: 0,
+      },
+    ],
+    photos: ["/images/phone-1.jpg"],
+  },
+  {
+    id: "s5",
+    hostId: "h5",
+    title: "Nap Seat near Grand Central",
+    description:
+      "Ultra-comfortable recliner in a dark, quiet room near Grand Central. Perfect for a power nap between meetings.",
+    spaceType: "nap_spot",
+    locationLabel: "Grand Central, Manhattan",
+    latitude: 40.7527,
+    longitude: -73.9772,
+    capacitySeats: 1,
+    availableSeats: 0,
+    pricePerMinutePerSeatUsd: 0.6,
+    minimumMinutes: 15,
+    maximumMinutes: 90,
+    rating: 4.5,
+    rules: {
+      quietRequired: true,
+      wifiAvailable: false,
+      laptopFriendly: false,
+      smokingAllowed: false,
+      phoneCallsAllowed: false,
+      foodAllowed: false,
+    },
+    availability: [
+      {
+        id: "a6",
+        spaceId: "s5",
+        startTime: "2026-04-24T10:00:00Z",
+        endTime: "2026-04-24T20:00:00Z",
+        capacitySeats: 1,
+        bookedSeats: 1,
+      },
+    ],
+    photos: ["/images/nap-1.jpg"],
+  },
+  {
+    id: "s6",
+    hostId: "h1",
+    title: "Beanbag Corner in Bushwick",
+    description:
+      "Three oversized beanbags in a colorful Bushwick studio. Chill vibes, good WiFi, no shoes required.",
+    spaceType: "quiet_corner",
+    locationLabel: "Bushwick, Brooklyn",
+    latitude: 40.6944,
+    longitude: -73.9213,
+    capacitySeats: 3,
+    availableSeats: 3,
+    pricePerMinutePerSeatUsd: 0.2,
+    minimumMinutes: 15,
+    maximumMinutes: 120,
+    rating: 4.4,
+    rules: {
+      quietRequired: false,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: false,
+      foodAllowed: true,
+    },
+    availability: [
+      {
+        id: "a7",
+        spaceId: "s6",
+        startTime: "2026-04-24T11:00:00Z",
+        endTime: "2026-04-24T22:00:00Z",
+        capacitySeats: 3,
+        bookedSeats: 0,
+      },
+    ],
+    photos: ["/images/quiet-1.jpg"],
+  },
+  {
+    id: "s7",
+    hostId: "h2",
+    title: "Standing Desk in Chelsea",
+    description:
+      "Adjustable standing desk in a modern Chelsea apartment. Dual monitor setup available for extra fee.",
+    spaceType: "desk",
+    locationLabel: "Chelsea, Manhattan",
+    latitude: 40.7465,
+    longitude: -74.0014,
+    capacitySeats: 1,
+    availableSeats: 1,
+    pricePerMinutePerSeatUsd: 0.45,
+    minimumMinutes: 30,
+    maximumMinutes: 180,
+    rating: 4.8,
+    rules: {
+      quietRequired: false,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: true,
+      foodAllowed: true,
+    },
+    availability: [
+      {
+        id: "a8",
+        spaceId: "s7",
+        startTime: "2026-04-24T08:00:00Z",
+        endTime: "2026-04-24T18:00:00Z",
+        capacitySeats: 1,
+        bookedSeats: 0,
+      },
+    ],
+    photos: ["/images/desk-2.jpg"],
+  },
+  {
+    id: "s8",
+    hostId: "h3",
+    title: "Oversized Armchair in Astoria",
+    description:
+      "Deep, velvet armchair next to a bay window in Astoria. Quiet street, good light, outlet nearby.",
+    spaceType: "chair",
+    locationLabel: "Astoria, Queens",
+    latitude: 40.7721,
+    longitude: -73.9301,
+    capacitySeats: 1,
+    availableSeats: 1,
+    pricePerMinutePerSeatUsd: 0.2,
+    minimumMinutes: 15,
+    maximumMinutes: 120,
+    rating: 4.3,
+    rules: {
+      quietRequired: true,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: false,
+      foodAllowed: false,
+    },
+    availability: [
+      {
+        id: "a9",
+        spaceId: "s8",
+        startTime: "2026-04-24T09:00:00Z",
+        endTime: "2026-04-24T15:00:00Z",
+        capacitySeats: 1,
+        bookedSeats: 0,
+      },
+    ],
+    photos: ["/images/chair-1.jpg"],
+  },
+  {
+    id: "s9",
+    hostId: "h4",
+    title: "Sectional Sofa in Park Slope",
+    description:
+      "Six-seat sectional in a brownstone living room. Hosts are usually in the kitchen, so you get the whole space to yourself.",
+    spaceType: "couch",
+    locationLabel: "Park Slope, Brooklyn",
+    latitude: 40.6710,
+    longitude: -73.9777,
+    capacitySeats: 6,
+    availableSeats: 4,
+    pricePerMinutePerSeatUsd: 0.15,
+    minimumMinutes: 20,
+    maximumMinutes: 240,
+    rating: 4.9,
+    rules: {
+      quietRequired: false,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: true,
+      foodAllowed: true,
+    },
+    availability: [
+      {
+        id: "a10",
+        spaceId: "s9",
+        startTime: "2026-04-24T08:00:00Z",
+        endTime: "2026-04-24T20:00:00Z",
+        capacitySeats: 6,
+        bookedSeats: 2,
+      },
+    ],
+    photos: ["/images/couch-3.jpg"],
+  },
+  {
+    id: "s10",
+    hostId: "h5",
+    title: "Cozy Reading Nook in Greenpoint",
+    description:
+      "Window seat with cushions and a small side table in a Greenpoint apartment. Natural light all day long.",
+    spaceType: "quiet_corner",
+    locationLabel: "Greenpoint, Brooklyn",
+    latitude: 40.7282,
+    longitude: -73.9542,
+    capacitySeats: 2,
+    availableSeats: 2,
+    pricePerMinutePerSeatUsd: 0.18,
+    minimumMinutes: 15,
+    maximumMinutes: 120,
+    rating: 4.6,
+    rules: {
+      quietRequired: true,
+      wifiAvailable: true,
+      laptopFriendly: true,
+      smokingAllowed: false,
+      phoneCallsAllowed: false,
+      foodAllowed: false,
+    },
+    availability: [
+      {
+        id: "a11",
+        spaceId: "s10",
+        startTime: "2026-04-24T10:00:00Z",
+        endTime: "2026-04-24T18:00:00Z",
+        capacitySeats: 2,
+        bookedSeats: 0,
+      },
+    ],
+    photos: ["/images/quiet-2.jpg"],
+  },
+];
+
+export const bookings: BookingRequest[] = [
+  {
+    id: "b1",
+    guestId: "u6",
+    hostId: "h1",
+    spaceId: "s1",
+    startTime: "2026-04-24T10:00:00Z",
+    endTime: "2026-04-24T11:00:00Z",
+    requestedSeats: 2,
+    durationMinutes: 60,
+    pricePerMinutePerSeatUsd: 0.25,
+    totalPriceUsd: 30.0,
+    status: "confirmed",
+    createdAt: "2026-04-23T14:00:00Z",
+  },
+  {
+    id: "b2",
+    guestId: "u7",
+    hostId: "h2",
+    spaceId: "s2",
+    startTime: "2026-04-24T08:30:00Z",
+    endTime: "2026-04-24T09:30:00Z",
+    requestedSeats: 1,
+    durationMinutes: 60,
+    pricePerMinutePerSeatUsd: 0.35,
+    totalPriceUsd: 21.0,
+    status: "checked_in",
+    createdAt: "2026-04-23T20:00:00Z",
+  },
+  {
+    id: "b3",
+    guestId: "u8",
+    hostId: "h4",
+    spaceId: "s9",
+    startTime: "2026-04-24T09:00:00Z",
+    endTime: "2026-04-24T10:00:00Z",
+    requestedSeats: 2,
+    durationMinutes: 60,
+    pricePerMinutePerSeatUsd: 0.15,
+    totalPriceUsd: 18.0,
+    status: "confirmed",
+    createdAt: "2026-04-23T18:00:00Z",
+  },
+  {
+    id: "b4",
+    guestId: "u6",
+    hostId: "h3",
+    spaceId: "s3",
+    startTime: "2026-04-23T14:00:00Z",
+    endTime: "2026-04-23T16:00:00Z",
+    requestedSeats: 1,
+    durationMinutes: 120,
+    pricePerMinutePerSeatUsd: 0.4,
+    totalPriceUsd: 48.0,
+    status: "completed",
+    createdAt: "2026-04-23T10:00:00Z",
+  },
+  {
+    id: "b5",
+    guestId: "u7",
+    hostId: "h5",
+    spaceId: "s5",
+    startTime: "2026-04-24T12:00:00Z",
+    endTime: "2026-04-24T12:45:00Z",
+    requestedSeats: 1,
+    durationMinutes: 45,
+    pricePerMinutePerSeatUsd: 0.6,
+    totalPriceUsd: 27.0,
+    status: "pending",
+    createdAt: "2026-04-24T06:00:00Z",
+  },
+  {
+    id: "b6",
+    guestId: "u8",
+    hostId: "h1",
+    spaceId: "s6",
+    startTime: "2026-04-22T11:00:00Z",
+    endTime: "2026-04-22T12:30:00Z",
+    requestedSeats: 2,
+    durationMinutes: 90,
+    pricePerMinutePerSeatUsd: 0.2,
+    totalPriceUsd: 36.0,
+    status: "cancelled",
+    createdAt: "2026-04-21T16:00:00Z",
+  },
+];
+
+export const checkInSessions: CheckInSession[] = [
+  {
+    id: "ci1",
+    bookingId: "b2",
+    checkInTime: "2026-04-24T08:30:00Z",
+    status: "active",
+  },
+  {
+    id: "ci2",
+    bookingId: "b4",
+    checkInTime: "2026-04-23T14:00:00Z",
+    checkOutTime: "2026-04-23T16:00:00Z",
+    status: "completed",
+  },
+];
+
+export function getSpaceById(id: string): SpaceUnit | undefined {
+  return spaces.find((s) => s.id === id);
+}
+
+export function getHostById(id: string): HostProfile | undefined {
+  return hosts.find((h) => h.id === id);
+}
+
+export function getHostBySpaceId(spaceId: string): HostProfile | undefined {
+  const space = getSpaceById(spaceId);
+  if (!space) return undefined;
+  return getHostById(space.hostId);
+}
+
+export function getBookingsForHost(hostId: string): BookingRequest[] {
+  return bookings.filter((b) => b.hostId === hostId);
+}
+
+export function getBookingsForGuest(guestId: string): BookingRequest[] {
+  return bookings.filter((b) => b.guestId === guestId);
+}
+
+export function getSpacesForHost(hostId: string): SpaceUnit[] {
+  return spaces.filter((s) => s.hostId === hostId);
+}
+
+export function getSpaceTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    couch: "Couch",
+    desk: "Desk",
+    chair: "Chair",
+    quiet_corner: "Quiet Corner",
+    nap_spot: "Nap Spot",
+    phone_call_corner: "Phone Call Corner",
+  };
+  return labels[type] || type;
+}

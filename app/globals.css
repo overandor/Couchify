@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 224 20% 97%;
+    --foreground: 222 20% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 20% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 20% 14%;
+    --primary: 215 80% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 90%;
+    --secondary-foreground: 222 20% 14%;
+    --muted: 220 14% 92%;
+    --muted-foreground: 220 8% 46%;
+    --accent: 32 95% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 215 80% 52%;
+    --radius: 1.5rem;
+    --chart-1: 215 80% 52%;
+    --chart-2: 32 95% 55%;
+    --chart-3: 160 60% 45%;
+    --chart-4: 280 60% 55%;
+    --chart-5: 350 70% 55%;
+  }
+
+  .dark {
+    --background: 222 20% 10%;
+    --foreground: 220 14% 96%;
+    --card: 222 18% 14%;
+    --card-foreground: 220 14% 96%;
+    --popover: 222 18% 14%;
+    --popover-foreground: 220 14% 96%;
+    --primary: 215 80% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 16% 20%;
+    --secondary-foreground: 220 14% 96%;
+    --muted: 222 14% 18%;
+    --muted-foreground: 220 8% 56%;
+    --accent: 32 95% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 14% 20%;
+    --input: 222 14% 20%;
+    --ring: 215 80% 52%;
+    --chart-1: 215 80% 52%;
+    --chart-2: 32 95% 55%;
+    --chart-3: 160 60% 45%;
+    --chart-4: 280 60% 55%;
+    --chart-5: 350 70% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Neumorphic utility classes */
+@layer utilities {
+  .neu-flat {
+    box-shadow:
+      8px 8px 24px rgba(16, 24, 40, 0.10),
+      -8px -8px 24px rgba(255, 255, 255, 0.90);
+  }
+
+  .neu-raised {
+    box-shadow:
+      6px 6px 16px rgba(16, 24, 40, 0.12),
+      -6px -6px 16px rgba(255, 255, 255, 0.95);
+  }
+
+  .neu-pressed {
+    box-shadow:
+      inset 4px 4px 12px rgba(16, 24, 40, 0.08),
+      inset -4px -4px 12px rgba(255, 255, 255, 0.80);
+  }
+
+  .neu-btn {
+    box-shadow:
+      4px 4px 12px rgba(16, 24, 40, 0.12),
+      -4px -4px 12px rgba(255, 255, 255, 0.90);
+    transition: all 0.15s ease;
+  }
+
+  .neu-btn:hover {
+    box-shadow:
+      2px 2px 6px rgba(16, 24, 40, 0.10),
+      -2px -2px 6px rgba(255, 255, 255, 0.85);
+  }
+
+  .neu-btn:active {
+    box-shadow:
+      inset 2px 2px 6px rgba(16, 24, 40, 0.08),
+      inset -2px -2px 6px rgba(255, 255, 255, 0.80);
+  }
+
+  .neu-input {
+    box-shadow:
+      inset 3px 3px 8px rgba(16, 24, 40, 0.06),
+      inset -3px -3px 8px rgba(255, 255, 255, 0.70);
+  }
+}
