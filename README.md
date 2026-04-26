@@ -1,132 +1,106 @@
 # Couchify
-Dock into private space — by the minute.
-
-
----
-
-# 🛋️ COUCHIFY — README.md
-
-```markdown
-# Couchify
 
 **Private space by the minute.**
 
-Couchify is a real-time marketplace where people can access private physical spaces — couches, desks, rooms, and quiet corners — on demand, by the minute.
+Couchify is a marketplace for booking unused private seating capacity by the minute. A space has multiple seats, and bookings reserve seats (not the full couch).
 
----
+## MVP Scope
 
-## 🧠 Overview
+This repository now contains a fully working **Next.js + TypeScript + Tailwind** app with mock data and these routes:
 
-Couchify is built for the time between places.
+- `/` landing page
+- `/explore` marketplace grid + filter chips
+- `/spaces/[id]` space detail + seat/minute selection + live price
+- `/host` host dashboard
+- `/host/spaces/new` create listing form UI
+- `/guest/bookings` guest booking/check-in view
+- `/profile` user profile and role toggle
 
-Not home.  
-Not work.  
-Not public.
+## Core Booking Rule
 
-It provides private, controlled environments exactly when needed.
+Price is computed by seat and minute:
 
----
+`total = seats × minutes × pricePerMinutePerSeatUsd`
 
-## 💡 Core Idea
+Example:
 
-> People move like ships through the city.  
-> Couchify gives them places to dock.
+- Capacity: 4 seats
+- Price: `$0.25 / min / seat`
+- Booking: `2 seats × 60 minutes`
+- Total: `$30.00`
 
-Hosts offer spaces.  
-Guests book them instantly.  
-Everything runs in real time.
+## Local Development
 
----
-
-## ⚙️ Core Features
-
-- **Minute-level booking**
-- **Real-time availability**
-- **Private access options**
-- **Host-away premium mode**
-- **Live session tracking**
-- **Rule-based space control**
-- **Messaging + reviews**
-- **Secure payments**
-
----
-
-## 🧩 Space Types
-
-- Couch  
-- Desk  
-- Quiet room  
-- Nap spot  
-- Balcony  
-- Office seat  
-- Phone-call corner  
-- Waiting space  
-
----
-
-## 💎 Premium Mode
-
-**Host Away / Private Dock**
-
-When the host is not present:
-- full privacy
-- premium pricing
-- exclusive access
-
----
-
-## 📱 Core Experience
-
-### Guests
-- discover nearby spaces
-- filter by rules, price, privacy
-- book exact minutes
-- check in and use space
-- extend or leave anytime
-
-### Hosts
-- list spaces
-- define rules
-- set availability
-- accept or auto-approve bookings
-- earn from idle space
-
----
-
-## 🖥️ Interface
-
-Couchify uses a **soft, neumorphic UI**:
-
-- rounded surfaces
-- subtle shadows
-- calm, premium feel
-- timeline-based booking (“time fabric”)
-
----
-
-## 🧭 Main Screens
-
-- Explore marketplace  
-- Space detail + booking  
-- Guest dashboard  
-- Host console  
-- Messaging  
-- Safety / disputes  
-
----
-
-## 🚀 Tech Stack
-
-- Frontend: React / Next.js  
-- Backend: FastAPI / Node  
-- Database: PostgreSQL  
-- Realtime: WebSockets  
-- Cache: Redis  
-- Payments: Stripe  
-
----
-
-## 🐳 Local Setup
+### 1) Install dependencies
 
 ```bash
-docker-compose up --build
+npm install
+```
+
+### 2) Start dev server
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000.
+
+### 3) Production build
+
+```bash
+npm run build
+npm run start
+```
+
+## Environment
+
+Copy example env:
+
+```bash
+cp .env.example .env.local
+```
+
+
+
+### DockOS draft save wiring
+
+`/host/spaces/new` now saves through a provider boundary:
+
+- `lib/data-provider.ts`
+- `lib/dockos-client.ts`
+
+Behavior:
+
+- If `NEXT_PUBLIC_DOCKOS_API_URL` is set, Couchify sends `POST {API_URL}/v1/spaces/drafts`.
+- If not set, Couchify falls back to a mock in-memory response (`mock_<timestamp>`).
+
+## Deploy to Vercel
+
+### Option A: GitHub import (recommended)
+
+1. Push this repo to GitHub.
+2. In Vercel, click **Add New Project**.
+3. Import the GitHub repository.
+4. Keep default Next.js build settings.
+5. Add env vars from `.env.example` if needed.
+6. Deploy.
+
+### Option B: Vercel CLI
+
+```bash
+npm i -g vercel
+vercel
+vercel --prod
+```
+
+## Project Structure
+
+- `app/` Next.js App Router pages and global styles
+- `components/` UI building blocks (neumorphic cards, selectors, pills)
+- `lib/` types, mock data, pricing/capacity helpers, DockOS utility
+- `vercel.json` Vercel framework config
+
+## Notes
+
+- No backend/database is required for this MVP.
+- All data is mocked in `lib/mock-data.ts`.

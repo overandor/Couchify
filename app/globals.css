@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: radial-gradient(circle at top left, #f4f6fb 0%, #e3e8f3 45%, #d8dfec 100%);
+  @apply text-slateInk;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.neu-input {
+  @apply w-full rounded-soft bg-nightCloud/80 px-4 py-3 shadow-neuInset outline-none backdrop-blur-md;
+}
+
+.neu-button {
+  @apply rounded-full bg-white/70 px-4 py-2 font-medium shadow-neu backdrop-blur-md transition hover:-translate-y-1 active:translate-y-0 active:scale-95;
+}
+
+.glass-card {
+  @apply rounded-soft border border-white/30 bg-white/45 shadow-glass backdrop-blur-lg;
+}
