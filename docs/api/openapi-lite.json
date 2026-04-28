@@ -1,0 +1,250 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Couchify Semantic Protocol API",
+    "version": "0.1.0",
+    "summary": "Consent-first API for local creator nodes, typed intent, artifacts, and proof manifests.",
+    "description": "A public-safe API surface for Couchify sessions. The API records consent, accepts typed semantic intent, produces dry-run plans, creates session artifacts, and writes development-history events."
+  },
+  "servers": [
+    { "url": "http://localhost:8717", "description": "Local developer node" }
+  ],
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "summary": "Health check",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Health response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Health" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/nodes/register": {
+      "post": {
+        "summary": "Register a consented local node",
+        "operationId": "registerNode",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NodeRegistration" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Node record",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Node" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/semantic/validate": {
+      "post": {
+        "summary": "Validate semantic intent and consent policy",
+        "operationId": "validateSemanticIntent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SemanticIntent" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Validation" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/semantic/plan": {
+      "post": {
+        "summary": "Create a dry-run plan from semantic intent",
+        "operationId": "planSemanticIntent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SemanticIntent" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plan result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Plan" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/artifacts/{artifact_id}": {
+      "get": {
+        "summary": "Get artifact proof record",
+        "operationId": "getArtifact",
+        "parameters": [
+          {
+            "name": "artifact_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artifact record",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Artifact" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/development/events": {
+      "post": {
+        "summary": "Append a development-history event",
+        "operationId": "appendDevelopmentEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DevelopmentEvent" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Development event",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DevelopmentEvent" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["healthy", "degraded", "offline"] },
+          "version": { "type": "string" },
+          "time": { "type": "string", "format": "date-time" }
+        },
+        "required": ["status", "version", "time"]
+      },
+      "Consent": {
+        "type": "object",
+        "properties": {
+          "session_recording": { "type": "boolean" },
+          "audio_transcription": { "type": "boolean" },
+          "artifact_generation": { "type": "boolean" },
+          "sharing_mode": { "type": "string", "enum": ["private", "anonymous", "attributed", "commercial_license"] },
+          "retention": { "type": "string", "enum": ["delete_immediately", "delete_24h", "keep_private", "publish_manifest_only"] }
+        },
+        "required": ["session_recording", "audio_transcription", "artifact_generation", "sharing_mode", "retention"]
+      },
+      "NodeRegistration": {
+        "type": "object",
+        "properties": {
+          "display_name": { "type": "string" },
+          "device_type": { "type": "string", "enum": ["laptop", "phone", "desktop", "room_node", "creator_seat"] },
+          "capabilities": { "type": "array", "items": { "type": "string" } },
+          "consent": { "$ref": "#/components/schemas/Consent" }
+        },
+        "required": ["display_name", "device_type", "capabilities", "consent"]
+      },
+      "Node": {
+        "allOf": [
+          { "$ref": "#/components/schemas/NodeRegistration" },
+          {
+            "type": "object",
+            "properties": {
+              "node_id": { "type": "string" },
+              "status": { "type": "string", "enum": ["available", "busy", "offline", "revoked"] }
+            },
+            "required": ["node_id", "status"]
+          }
+        ]
+      },
+      "SemanticIntent": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "typed_intent": { "type": "string" },
+          "desired_outputs": { "type": "array", "items": { "type": "string" } },
+          "policies": { "type": "array", "items": { "type": "string" } },
+          "dry_run": { "type": "boolean" }
+        },
+        "required": ["title", "typed_intent", "desired_outputs", "policies"]
+      },
+      "Validation": {
+        "type": "object",
+        "properties": {
+          "valid": { "type": "boolean" },
+          "violations": { "type": "array", "items": { "type": "string" } },
+          "required_consents": { "type": "array", "items": { "type": "string" } },
+          "intent_hash": { "type": "string" }
+        },
+        "required": ["valid", "violations", "required_consents"]
+      },
+      "Plan": {
+        "type": "object",
+        "properties": {
+          "plan_id": { "type": "string" },
+          "steps": { "type": "array", "items": { "type": "string" } },
+          "risk_level": { "type": "string", "enum": ["low", "medium", "high", "blocked"] }
+        },
+        "required": ["plan_id", "steps", "risk_level"]
+      },
+      "Artifact": {
+        "type": "object",
+        "properties": {
+          "artifact_id": { "type": "string" },
+          "kind": { "type": "string" },
+          "title": { "type": "string" },
+          "sha256": { "type": "string" },
+          "visibility": { "type": "string", "enum": ["private", "shared", "public_manifest"] }
+        },
+        "required": ["artifact_id", "kind", "title", "sha256", "visibility"]
+      },
+      "DevelopmentEvent": {
+        "type": "object",
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "title": { "type": "string" },
+          "summary": { "type": "string" },
+          "files_changed": { "type": "array", "items": { "type": "string" } },
+          "decision": { "type": "string" },
+          "next_action": { "type": "string" }
+        },
+        "required": ["timestamp", "title", "summary"]
+      }
+    }
+  }
+}
