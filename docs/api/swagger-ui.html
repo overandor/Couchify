@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Couchify Semantic Protocol API Docs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+  <style>
+    body { margin: 0; background: #111; }
+    .topbar { display: none; }
+    #banner { padding: 18px 28px; color: #fff; background: #111; font-family: system-ui, sans-serif; border-bottom: 1px solid #333; }
+    #banner h1 { margin: 0 0 6px; font-size: 22px; }
+    #banner p { margin: 0; color: #ccc; max-width: 900px; line-height: 1.45; }
+  </style>
+</head>
+<body>
+  <div id="banner">
+    <h1>Couchify Semantic Protocol API</h1>
+    <p>Local-first, consent-based API docs for creator seats, semantic intent, artifact generation, proof manifests, and development-history logging.</p>
+  </div>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script>
+    window.ui = SwaggerUIBundle({
+      url: './openapi-lite.json',
+      dom_id: '#swagger-ui',
+      deepLinking: true,
+      presets: [SwaggerUIBundle.presets.apis],
+      layout: 'BaseLayout'
+    });
+  </script>
+</body>
+</html>
